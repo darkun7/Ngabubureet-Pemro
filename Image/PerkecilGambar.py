@@ -7,18 +7,21 @@ from PIL import Image
 
 root = os.getcwd()					# folder utama
 
-target_dir = "kompres"				# target folder
-cwd = os.getcwd()+"\\"+target_dir 	# folder target
-os.chdir(cwd)						# pindah ke direktori target
-
-images = [file for file in os.listdir() if file.endswith(('jpg', 'png', 'jfif'))]	# Memperoleh file yang berekstensi tertentu untuk disimpan kedalam variable
-
 def createFolder(fname):			# fungsi membuat folder, dengan parameter direktori folder yang akan dibuat
 	if not os.path.exists(fname):	# pengujian apakah folder sudah ada
 		try:						
 			os.mkdir(fname)			# membuat folder
 		except OSError:			
 			print("Gagal membuat folder")
+
+target_dir = "kompres"				# target folder
+cwd = os.getcwd()+"\\"+target_dir 	# folder target
+createFolder(cwd)
+os.chdir(cwd)						# pindah ke direktori target
+
+images = [file for file in os.listdir() if file.endswith(('jpg', 'png', 'jfif'))]	# Memperoleh file yang berekstensi tertentu untuk disimpan kedalam variable
+
+
 
 def compressImage():
 	compressed_file = []			# list kosong, nantinya untuk menyimpan nama file
@@ -29,6 +32,8 @@ def compressImage():
 		print("Compressing file", file_name,"...")
 		
 		image = Image.open(img)		# stream gambar yang akan diproses
+		image = image.quantize(method=2, colors=256)
+		image = image.convert('RGB')
 		image.save(file_name,		# menyimpan gambar dengan pengaturan kompresi tertentu
 				optimize = True,
 				quality = 20)
